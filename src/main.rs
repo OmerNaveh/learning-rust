@@ -1,22 +1,11 @@
 #![allow(unused)]
+
 use std::fmt;
 use std::io;
+use rand::Rng;
+use colored::*;
+use std::cmp::Ordering;
 
-struct MyType {
-    name: String,
-    age: u32,
-}
-impl fmt::Display for MyType {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "MyType {{ name: {}, age: {} }}", self.name, self.age)
-    }
-}
-
-impl fmt::Debug for MyType {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Debug {{ name: {}, age: {} }}", self.name, self.age)
-    }
-}
 
 struct Complex {
     real: f64,
@@ -37,21 +26,6 @@ impl fmt::Debug for Complex {
             real = self.real,
             imag = self.imag
         )
-    }
-}
-
-struct List(Vec<i32>);
-impl fmt::Display for List {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let List(ref vec) = *self;
-        write!(f, "[")?;
-        for (count, v) in vec.iter().enumerate() {
-            if count != 0 {
-                write!(f, ", ")?;
-            }
-            write!(f, "{}:{}", count, v)?;
-        }
-        write!(f, "]")
     }
 }
 
@@ -85,20 +59,35 @@ impl Day {
     }
 }
 
-fn print_day(day: Day) {
-    println!("Is {} a weekend? {}", day.morning(), day.is_weekend());
-}
 
 fn main() {
-    // println!("What's your name?");
-    // let mut name = String::new();
-    // io::stdin().read_line(&mut name).expect("Failed to read line");
-    // let name = name.trim_end();
-    // println!("Hello, {}!", name);
-   
-    let day = Day::Monday;
-    print_day(day);
-    let day = Day::Saturday;
-    print_day(day);
+//    guessing_game();
 
+
+}
+
+
+fn guessing_game(){
+    let random_number = rand::thread_rng().gen_range(1..101);
+    println!("Random number: {}",random_number);
+    loop{
+        println!("Guess the number!");
+        let mut guess: String = String::new();
+        io::stdin().read_line(&mut guess).expect("Failed to read line");
+
+        let guess:u32 = match guess.trim().parse(){
+            Ok(u32)=> u32,
+            Err(_)=> continue,
+        };
+
+        match guess.cmp(&random_number){
+            Ordering::Less => println!("{}","Too small!".red()),
+            Ordering::Greater => println!("{}","Too big!".red()),
+            Ordering::Equal => {
+                println!("{}","You win!".green());
+                break;
+            }
+        }
+       
+    }
 }

@@ -5,9 +5,12 @@ use rand::Rng;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt;
+use std::fs;
 use std::io;
+use std::io::Write;
 mod blog;
 use blog::blog_site::run;
+use std::fs::File;
 
 struct Complex {
     real: f64,
@@ -74,32 +77,15 @@ impl Day {
 fn main() {
     // guessing_game();
     // blog::blog_site::run();
-
-    // let mut v:Vec<i32> = Vec::new();
-    // populate_vector(&mut v,101);
-
-    // let target = 50;
-    // match binary_search(&v, target){
-    //     Some(index) => println!("{} found at index {}", target, index),
-    //     None => println!("{} not found", target),
-    // }
-
-    let s = String::from("Hello world you world");
-    let mut map:HashMap<&str, u32> = HashMap::new();
-
-    for word in s.split_whitespace(){
-        let count = map.entry(word).or_insert(0);
-        *count += 1;
-    }
-    println!("{:?}", map);
+   
 
 }
+
 fn populate_vector(v: &mut Vec<i32>,size:i32) {
     for i in 1..size {
         v.push(i);
     }
 }
-
 fn binary_search(v: &Vec<i32>, target:i32)-> Option<usize>{
     let mut low = 0;
     let mut high = v.len() - 1;
@@ -114,9 +100,43 @@ fn binary_search(v: &Vec<i32>, target:i32)-> Option<usize>{
     None
 
 }
-fn print_str(s: &String) {
-    println!("{}", s);
+fn vectors (){
+    let mut v:Vec<i32> = Vec::new();
+    populate_vector(&mut v,101);
+
+    let target = 50;
+    match binary_search(&v, target){
+        Some(index) => println!("{} found at index {}", target, index),
+        None => println!("{} not found", target),
+    }
 }
+fn hashmaps(){
+    let s = String::from("Hello world you world");
+    let mut map:HashMap<&str, u32> = HashMap::new();
+
+    for word in s.split_whitespace(){
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+    }
+    println!("{:?}", map);
+}
+fn fs_ops(){
+    let f = File::open("hello.txt");
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            std::io::ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(mut fc) => {
+                    fc.write(b"Hello World");
+                     fc
+                },
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
+            other_error => panic!("Problem opening the file: {:?}", other_error),
+        },
+    };
+}
+
 fn guessing_game() {
     let random_number = rand::thread_rng().gen_range(1..101);
     println!("Random number: {}", random_number);

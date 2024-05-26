@@ -1,11 +1,12 @@
 #![allow(unused)]
 
+use colored::*;
+use rand::Rng;
+use std::cmp::Ordering;
 use std::fmt;
 use std::io;
-use rand::Rng;
-use colored::*;
-use std::cmp::Ordering;
-
+mod blog;
+use blog::blog_site::run;
 
 struct Complex {
     real: f64,
@@ -28,7 +29,17 @@ impl fmt::Debug for Complex {
         )
     }
 }
-
+impl Complex {
+    fn is_equal(&self, other: &Complex) -> bool {
+        self.real == other.real && self.imag == other.imag
+    }
+    fn simply_zero() -> Complex {
+        Complex {
+            real: 0.0,
+            imag: 0.0,
+        }
+    }
+}
 enum Day {
     Monday,
     Tuesday,
@@ -59,35 +70,36 @@ impl Day {
     }
 }
 
-
 fn main() {
-//    guessing_game();
-
-
+    // guessing_game();
+    // blog::blog_site::run();
 }
 
-
-fn guessing_game(){
+fn print_str(s: &String) {
+    println!("{}", s);
+}
+fn guessing_game() {
     let random_number = rand::thread_rng().gen_range(1..101);
-    println!("Random number: {}",random_number);
-    loop{
+    println!("Random number: {}", random_number);
+    loop {
         println!("Guess the number!");
         let mut guess: String = String::new();
-        io::stdin().read_line(&mut guess).expect("Failed to read line");
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
 
-        let guess:u32 = match guess.trim().parse(){
-            Ok(u32)=> u32,
-            Err(_)=> continue,
+        let guess: u32 = match guess.trim().parse() {
+            Ok(u32_num) => u32_num,
+            Err(_) => continue,
         };
 
-        match guess.cmp(&random_number){
-            Ordering::Less => println!("{}","Too small!".red()),
-            Ordering::Greater => println!("{}","Too big!".red()),
+        match guess.cmp(&random_number) {
+            Ordering::Less => println!("{}", "Too small!".red()),
+            Ordering::Greater => println!("{}", "Too big!".red()),
             Ordering::Equal => {
-                println!("{}","You win!".green());
+                println!("{}", "You win!".green());
                 break;
             }
         }
-       
     }
 }

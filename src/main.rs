@@ -3,6 +3,7 @@
 use colored::*;
 use rand::Rng;
 use std::cmp::Ordering;
+use std::collections::HashMap;
 use std::fmt;
 use std::io;
 mod blog;
@@ -73,8 +74,46 @@ impl Day {
 fn main() {
     // guessing_game();
     // blog::blog_site::run();
+
+    // let mut v:Vec<i32> = Vec::new();
+    // populate_vector(&mut v,101);
+
+    // let target = 50;
+    // match binary_search(&v, target){
+    //     Some(index) => println!("{} found at index {}", target, index),
+    //     None => println!("{} not found", target),
+    // }
+
+    let s = String::from("Hello world you world");
+    let mut map:HashMap<&str, u32> = HashMap::new();
+
+    for word in s.split_whitespace(){
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+    }
+    println!("{:?}", map);
+
+}
+fn populate_vector(v: &mut Vec<i32>,size:i32) {
+    for i in 1..size {
+        v.push(i);
+    }
 }
 
+fn binary_search(v: &Vec<i32>, target:i32)-> Option<usize>{
+    let mut low = 0;
+    let mut high = v.len() - 1;
+    while low <= high {
+        let mid = (low + high) / 2;
+        match v[mid].cmp(&target) {
+            Ordering::Less => low = mid + 1,
+            Ordering::Greater => high = mid - 1,
+            Ordering::Equal => return Some(mid),
+        }
+    }
+    None
+
+}
 fn print_str(s: &String) {
     println!("{}", s);
 }

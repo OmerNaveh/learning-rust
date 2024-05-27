@@ -16,13 +16,11 @@ struct Complex {
     real: f64,
     imag: f64,
 }
-
 impl fmt::Display for Complex {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{} + {}i", self.real, self.imag)
     }
 }
-
 impl fmt::Debug for Complex {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
@@ -74,13 +72,25 @@ impl Day {
     }
 }
 
+
+
 fn main() {
     // guessing_game();
     // blog::blog_site::run();
    
+   
 
 }
 
+fn generic_get_largest<T: PartialOrd + Copy>(list :Vec<T>)->T{
+    let mut greatest = list[0];
+    for &item in list.iter(){
+        if item > greatest{
+            greatest = item;
+        }
+    }
+    greatest
+}
 fn populate_vector(v: &mut Vec<i32>,size:i32) {
     for i in 1..size {
         v.push(i);

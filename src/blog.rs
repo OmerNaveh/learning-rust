@@ -19,13 +19,13 @@ pub mod blog_site {
         }
     }
 
-    pub struct Post {
+    pub struct Post<'a> {
         title: String,
         content: String,
-        author: User,
+        author: &'a User,
     }
-    impl Post {
-        pub fn new(title: String, content: String, author: User) -> Post {
+    impl<'a> Post<'a> {
+        pub fn new(title: String, content: String, author: &'a User) -> Post {
             Post {
                 title,
                 content,
@@ -39,14 +39,14 @@ pub mod blog_site {
         }
     }
 
-    pub struct Comment {
+    pub struct Comment<'a,'b> {
         content: String,
-        author: User,
-        post: Post,
+        author: &'a User,
+        post: &'b Post<'a>,
     }
 
-    impl Comment {
-        pub fn new(content: String, author: User, post: Post) -> Comment {
+    impl <'a, 'b> Comment<'a, 'b> {
+        pub fn new(content: String, author: &'a User, post: &'b Post<'a>) ->  Comment<'a,'b> {
             Comment {
                 content,
                 author,
@@ -66,9 +66,13 @@ pub mod blog_site {
         let mut user2 = User::new("Jane".to_string(), "jane@gmail.com".to_string());
         user2.sign_in();
 
-        let post = Post::new("Post Title".to_string(), "Post Content".to_string(), user1);
+        let post = Post::new("Post Title".to_string(), "Post Content".to_string(), &user1);
 
-        let comment = Comment::new("Comment Content".to_string(), user2, post);
+        let comment = Comment::new("Comment Content".to_string(), &user2, &post);
         comment.display();
+        post.display();
+        
+        println!("{} has signed in {} times", user1.username, user1.sign_in_count);
+        println!("{} has signed in {} times", user2.username, user2.sign_in_count);
     }
 }

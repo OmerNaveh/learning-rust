@@ -73,15 +73,19 @@ impl Day {
 }
 
 
-
 fn main() {
     // guessing_game();
     // blog::blog_site::run();
-   
-   
+    
 
 }
-
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
 fn generic_get_largest<T: PartialOrd + Copy>(list :Vec<T>)->T{
     let mut greatest = list[0];
     for &item in list.iter(){

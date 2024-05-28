@@ -77,7 +77,7 @@ impl Day {
 fn main() {
     // guessing_game();
     // blog::blog_site::run();
-    cli_app();
+    // cli_app();
 
 }
 

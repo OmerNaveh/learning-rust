@@ -4,6 +4,7 @@ use colored::*;
 use rand::Rng;
 use std::cmp::Ordering;
 use std::collections::HashMap;
+use std::error::Error;
 use std::fmt;
 use std::fs;
 use std::io;
@@ -76,9 +77,10 @@ impl Day {
 fn main() {
     // guessing_game();
     // blog::blog_site::run();
-    
+    cli_app();
 
 }
+
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     if x.len() > y.len() {
         x
@@ -150,7 +152,6 @@ fn fs_ops(){
         },
     };
 }
-
 fn guessing_game() {
     let random_number = rand::thread_rng().gen_range(1..101);
     println!("Random number: {}", random_number);
@@ -175,4 +176,41 @@ fn guessing_game() {
             }
         }
     }
+}
+
+fn cli_app(){
+    let args: Vec<String> = std::env::args().collect();
+    let config = Config::new(args).unwrap_or_else(|err|{
+        println!("Problem parsing arguments: {}", err);
+        std::process::exit(1);
+    });
+
+    let content = read_file_contents(&config.filename).unwrap_or_else(|err|{
+        println!("Problem reading file: {}", err);
+        std::process::exit(1);
+    });
+
+    println!("File contents: {}", content);
+}
+struct Config {
+    query: String,
+    filename: String,
+}
+
+impl Config{
+    fn new(args: Vec<String>) ->Result<Config,String>{
+        if args.len() < 3 {
+            return Err("Not enough arguments".to_string());
+        }
+        let query = args[1].clone();
+        let filename = args[2].clone();
+        Ok(Config{query,filename})
+    }
+}
+
+fn read_file_contents(filename: &str) -> Result<String, Box<dyn Error>> {
+    let content = fs::read_to_string(filename)?;
+
+    Ok(content)
+
 }

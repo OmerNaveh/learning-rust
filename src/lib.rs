@@ -1,3 +1,4 @@
+#![allow(unused)]
 
 #[derive(Debug)]
 struct Rectangle {
